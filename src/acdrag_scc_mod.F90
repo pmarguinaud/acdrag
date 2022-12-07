@@ -1,7 +1,7 @@
 MODULE ACDRAG_SCC_MOD
 CONTAINS
   SUBROUTINE ACDRAG_SCC (YDCST, YDML_PHY_MF, KIDIA, KFDIA, KLON, KTDIA, KLEV, PAPRS, PAPRSF, PDELP, PNBVNO, PRDELP, PU, PV,  &
-  & PRCORI, PGETRL, PGWDCS, PVRLAN, PVRLDI, PSTRDU, PSTRDV, PRAPTRAJ)
+  & PRCORI, PGETRL, PGWDCS, PVRLAN, PVRLDI, PSTRDU, PSTRDV, PRAPTRAJ, my_stack_argument)
     !-----------------------------------------------------------------------
     ! - INPUT  2D .
     ! - INPUT  1D .
@@ -101,6 +101,7 @@ CONTAINS
     !      R. El Khatib 20-Oct-2014 Fix a broken vectorization + workaround against Intel bug
     !-----------------------------------------------------------------------
     
+    USE stack_mod
     USE MODEL_PHYSICS_MF_MOD, ONLY: MODEL_PHYSICS_MF_TYPE
     USE PARKIND1, ONLY: JPIM, JPRB, JPRD
     USE YOMHOOK, ONLY: LHOOK, DR_HOOK
@@ -148,7 +149,31 @@ CONTAINS
     & ZPRRAP, ZRZ, ZTEMPF, ZTEST, ZTUNE, ZUSTAR, ZVSTAR, ZX, ZZPR, ZRZR
     REAL(KIND=JPRB) :: ZCOS
     REAL(KIND=JPRB) :: ZHOOK_HANDLE
+    TYPE(STACK), INTENT(IN) :: my_stack_argument
+    TYPE(STACK) :: my_stack_local
+POINTER (IP_ZIPOI_, ZIPOI )
+POINTER (IP_ZNFNO_, ZNFNO )
+POINTER (IP_ZPOID_, ZPOID )
+POINTER (IP_ZRAPP_, ZRAPP )
+POINTER (IP_ZU_, ZU )
+POINTER (IP_ZV_, ZV )
+POINTER (IP_ZWGHT_, ZWGHT )
 !$acc routine vector
+    my_stack_local = my_stack_argument
+    IP_ZIPOI_ = my_stack_local%L
+    my_stack_local%L = my_stack_local%L+JPRB*SIZE(ZIPOI)
+    IP_ZNFNO_ = my_stack_local%L
+    my_stack_local%L = my_stack_local%L+JPRB*SIZE(ZNFNO)
+    IP_ZPOID_ = my_stack_local%L
+    my_stack_local%L = my_stack_local%L+JPRB*SIZE(ZPOID)
+    IP_ZRAPP_ = my_stack_local%L
+    my_stack_local%L = my_stack_local%L+JPRB*SIZE(ZRAPP)
+    IP_ZU_ = my_stack_local%L
+    my_stack_local%L = my_stack_local%L+JPRB*SIZE(ZU)
+    IP_ZV_ = my_stack_local%L
+    my_stack_local%L = my_stack_local%L+JPRB*SIZE(ZV)
+    IP_ZWGHT_ = my_stack_local%L
+    my_stack_local%L = my_stack_local%L+JPRB*SIZE(ZWGHT)
 !$acc data present( PAPRS, PAPRSF, PDELP, PNBVNO, PRDELP, PU, PV, PRCORI, PGETRL, PGWDCS, PVRLAN, PVRLDI, PSTRDU, PSTRDV,  &
 !$acc & PRAPTRAJ, YDCST, YDML_PHY_MF )
     

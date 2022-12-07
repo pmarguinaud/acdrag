@@ -125,7 +125,7 @@ PROGRAM WRAP_ACDRAG
     
     CALL ACDRAG_SCC(YDCST, YDML_PHY_MF, KIDIA, KFDIA, NPROMA, KTDIA, KLEV, PAPRS(:, :, IBL), PAPRSF(:, :, IBL),  &
     & PDELP(:, :, IBL), PNBVNO(:, :, IBL), PRDELP(:, :, IBL), PU(:, :, IBL), PV(:, :, IBL), PRCORI(:, IBL), PGETRL(:, IBL),  &
-    & PGWDCS(:, IBL), PVRLAN(:, IBL), PVRLDI(:, IBL), PSTRDU(:, :, IBL), PSTRDV(:, :, IBL), PRAPTRAJ(:, :, IBL))
+    & PGWDCS(:, IBL), PVRLAN(:, IBL), PVRLDI(:, IBL), PSTRDU(:, :, IBL), PSTRDV(:, :, IBL), PRAPTRAJ(:, :, IBL), my_stack_ptr)
     
   END DO
 !$acc end parallel loop
