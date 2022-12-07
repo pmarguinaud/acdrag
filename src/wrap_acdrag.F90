@@ -87,7 +87,8 @@ PROGRAM WRAP_ACDRAG
   OPEN(UNIT = ILUN, FILE = TRIM(CLCASE) // '/ACDRAG.DIMS.dat', FORM = 'UNFORMATTED', STATUS = 'OLD')
   READ(ILUN) KLON, KLEV, KIDIA
   CLOSE(UNIT = ILUN)
-  
+  !$ACC ENTER DATA COPYIN(YDML_PHY_MF, YDCST)
+ 
   KTDIA = 1
   
   ! LLVERBOSE = .TRUE.
@@ -95,7 +96,7 @@ PROGRAM WRAP_ACDRAG
   WRITE(*, *) "KLON = ", KLON, "    KLEV = ", KLEV
   WRITE(*, *) "NPROMA = ", NPROMA, "  NBLOCKS = ", NGPBLKS
   
-  ALLOCATE (my_stack_array(100000*KLON, NGPBLKS))
+  ALLOCATE (my_stack_array(20000*NPROMA, NGPBLKS))
   
   CALL GETDATA(CLCASE, NPROMA, NGPBLKS, PAPRS, PAPRSF, PDELP, PNBVNO, PRDELP, PU, PV, PRCORI, PGETRL, PGWDCS, PVRLAN, PVRLDI,  &
   & PSTRDU_R, PSTRDV_R, PRAPTRAJ_R, LLVERBOSE)
@@ -111,13 +112,16 @@ PROGRAM WRAP_ACDRAG
 #ifdef _MPI
   start_time = MPI_WTime()
 #endif
+
+!$ACC ENTER DATA COPYIN(PAPRS, PAPRSF, PDELP, PNBVNO, PRDELP, PU, PV, PRCORI, &
+!$ACC PGETRL, PGWDCS, PVRLAN, PVRLDI,PSTRDU, PSTRDV, PRAPTRAJ)
   
-  
-!$acc parallel loop gang
+!$ACC DATA CREATE(my_stack_array) 
+!$acc parallel loop gang private(my_stack_ptr)
   DO IBL=1,NGPBLKS
     
     my_stack_ptr%L = LOC(my_stack_array(1, IBL))
-    my_stack_ptr%U = my_stack_ptr%L + KLON*100000*8
+    my_stack_ptr%U = my_stack_ptr%L + NPROMA*20000
     
     KIDIA = 1
     KTDIA = 1
@@ -130,15 +134,14 @@ PROGRAM WRAP_ACDRAG
   END DO
 !$acc end parallel loop
   
+!$ACC END DATA
 #ifdef _MPI
   end_time = MPI_WTime()
   WRITE(*, *) "Time in main loop = ", end_time - start_time
 #endif
   
-  
-  
-  !CALL SAVEDATA (CLCASE, NPROMA, NGPBLKS, KLEV, KLON, &
-  !PSTRDU, PSTRDV, PRAPTRAJ)
+ 
+  !$ACC UPDATE HOST(PSTRDU, PSTRDV, PRAPTRAJ) 
   
   
   IF (LLCHECK == .true.) THEN
