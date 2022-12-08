@@ -108,15 +108,17 @@ PROGRAM WRAP_ACDRAG
   PSTRDU = ZNAN
   PSTRDV = ZNAN
   PRAPTRAJ = ZNAN
-  
-#ifdef _MPI
-  start_time = MPI_WTime()
-#endif
 
 !$ACC ENTER DATA COPYIN(PAPRS, PAPRSF, PDELP, PNBVNO, PRDELP, PU, PV, PRCORI, &
 !$ACC PGETRL, PGWDCS, PVRLAN, PVRLDI,PSTRDU, PSTRDV, PRAPTRAJ)
   
 !$ACC DATA CREATE(my_stack_array) 
+
+
+#ifdef _MPI
+  start_time = MPI_WTime()
+#endif
+
 !$acc parallel loop gang default(present) private(my_stack_ptr)
   DO IBL=1,NGPBLKS
     
@@ -134,13 +136,14 @@ PROGRAM WRAP_ACDRAG
   END DO
 !$acc end parallel loop
   
-!$ACC END DATA
 #ifdef _MPI
   end_time = MPI_WTime()
   WRITE(*, *) "Time in main loop = ", end_time - start_time
 #endif
   
  
+!$ACC END DATA
+
   !$ACC UPDATE HOST(PSTRDU, PSTRDV, PRAPTRAJ) 
   
   
