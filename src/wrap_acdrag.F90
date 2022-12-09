@@ -96,7 +96,7 @@ PROGRAM WRAP_ACDRAG
   WRITE(*, *) "KLON = ", KLON, "    KLEV = ", KLEV
   WRITE(*, *) "NPROMA = ", NPROMA, "  NBLOCKS = ", NGPBLKS
   
-  ALLOCATE (my_stack_array(10000*NPROMA, NGPBLKS))
+  ALLOCATE (my_stack_array(5904*NPROMA, NGPBLKS))
   
   CALL GETDATA(CLCASE, NPROMA, NGPBLKS, PAPRS, PAPRSF, PDELP, PNBVNO, PRDELP, PU, PV, PRCORI, PGETRL, PGWDCS, PVRLAN, PVRLDI,  &
   & PSTRDU_R, PSTRDV_R, PRAPTRAJ_R, LLVERBOSE)
@@ -123,7 +123,7 @@ PROGRAM WRAP_ACDRAG
   DO IBL=1,NGPBLKS
     
     my_stack_ptr%L = LOC(my_stack_array(1, IBL))
-    my_stack_ptr%U = my_stack_ptr%L + NPROMA*10000
+    my_stack_ptr%U = my_stack_ptr%L + NPROMA*5904
     
     KIDIA = 1
     KTDIA = 1

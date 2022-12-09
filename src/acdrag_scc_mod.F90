@@ -174,6 +174,7 @@ POINTER (IP_ZWGHT_, ZWGHT )
     my_stack_local%L = my_stack_local%L+JPRB*SIZE(ZV)
     IP_ZWGHT_ = my_stack_local%L
     my_stack_local%L = my_stack_local%L+JPRB*SIZE(ZWGHT)
+    !IF(my_stack_local%L > my_stack_local%U) write(*,*) "stack overflow in acdrag : ", my_stack_local%L - my_stack_local%U
 !$acc data present( PAPRS, PAPRSF, PDELP, PNBVNO, PRDELP, PU, PV, PRCORI, PGETRL, PGWDCS, PVRLAN, PVRLDI, PSTRDU, PSTRDV,  &
 !$acc & PRAPTRAJ, YDCST, YDML_PHY_MF )
     
