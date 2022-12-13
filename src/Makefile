@@ -1,6 +1,8 @@
 include Makefile.inc
 
-acdrag_scc_mod.o: acdrag_scc_mod.F90 stack_mod.o model_physics_mf_mod.o parkind1.o yomhook.o yomcst.o
+all: wrap_acdrag.x
+
+acdrag_scc_mod.o: acdrag_scc_mod.F90 stack_mod.o 
 	$(FC) -c acdrag_scc_mod.F90
 
 check_utils_mod.o: check_utils_mod.F90 parkind1.o
@@ -147,7 +149,7 @@ parkind1.o: parkind1.F90
 stack_mod.o: stack_mod.F90 
 	$(FC) -c stack_mod.F90
 
-wrap_acdrag.o: wrap_acdrag.F90 acdrag_scc_mod.o model_physics_mf_mod.o parkind1.o yomcst.o load_tcst_mod.o load_model_physics_mf_type_mod.o getdata_mod.o xrd_getoptions.o check_utils_mod.o stack_mod.o
+wrap_acdrag.o: wrap_acdrag.F90 acdrag_scc_mod.o stack_mod.o
 	$(FC) -c wrap_acdrag.F90
 
 xrd_getoptions.o: xrd_getoptions.F90 parkind1.o xrd_unix_env.o
@@ -216,8 +218,8 @@ yomtoph.o: yomtoph.F90 parkind1.o
 yomvdoz.o: yomvdoz.F90 parkind1.o
 	$(FC) -c yomvdoz.F90
 
-wrap_acdrag.x: wrap_acdrag.o acdrag_scc_mod.o check_utils_mod.o copy_model_physics_mf_type_mod.o copy_sl_struct_mod.o copy_tarphy_mod.o copy_tcst_mod.o copy_tcvmnh_mod.o copy_tdprecips_mod.o copy_tdvisi_mod.o copy_tlouis_mod.o copy_tmse_mod.o copy_tnorgwd_mod.o copy_tparar_mod.o copy_tphy0_mod.o copy_tphy1_mod.o copy_tphy2_mod.o copy_tphy3_mod.o copy_tphy_mod.o copy_tphyds_mod.o copy_tsimphl_mod.o copy_tsta_mod.o copy_ttoph_mod.o copy_tvdoz_mod.o eint_mod.o getdata_mod.o load_model_physics_mf_type_mod.o load_sl_struct_mod.o load_tarphy_mod.o load_tcst_mod.o load_tcvmnh_mod.o load_tdprecips_mod.o load_tdvisi_mod.o load_tlouis_mod.o load_tmse_mod.o load_tnorgwd_mod.o load_tparar_mod.o load_tphy0_mod.o load_tphy1_mod.o load_tphy2_mod.o load_tphy3_mod.o load_tphy_mod.o load_tphyds_mod.o load_tsimphl_mod.o load_tsta_mod.o load_ttoph_mod.o load_tvdoz_mod.o model_physics_mf_mod.o parkind1.o stack_mod.o xrd_getoptions.o xrd_unix_env.o yomarphy.o yomcst.o yomcvmnh.o yomdprecips.o yomdvisi.o yomhook.o yomlouis.o yommse.o yomnorgwd.o yomparar.o yomphy.o yomphy0.o yomphy1.o yomphy2.o yomphy3.o yomphyds.o yomsimphl.o yomsta.o yomtoph.o yomvdoz.o
-	$(FC) -o wrap_acdrag.x wrap_acdrag.o acdrag_scc_mod.o check_utils_mod.o copy_model_physics_mf_type_mod.o copy_sl_struct_mod.o copy_tarphy_mod.o copy_tcst_mod.o copy_tcvmnh_mod.o copy_tdprecips_mod.o copy_tdvisi_mod.o copy_tlouis_mod.o copy_tmse_mod.o copy_tnorgwd_mod.o copy_tparar_mod.o copy_tphy0_mod.o copy_tphy1_mod.o copy_tphy2_mod.o copy_tphy3_mod.o copy_tphy_mod.o copy_tphyds_mod.o copy_tsimphl_mod.o copy_tsta_mod.o copy_ttoph_mod.o copy_tvdoz_mod.o eint_mod.o getdata_mod.o load_model_physics_mf_type_mod.o load_sl_struct_mod.o load_tarphy_mod.o load_tcst_mod.o load_tcvmnh_mod.o load_tdprecips_mod.o load_tdvisi_mod.o load_tlouis_mod.o load_tmse_mod.o load_tnorgwd_mod.o load_tparar_mod.o load_tphy0_mod.o load_tphy1_mod.o load_tphy2_mod.o load_tphy3_mod.o load_tphy_mod.o load_tphyds_mod.o load_tsimphl_mod.o load_tsta_mod.o load_ttoph_mod.o load_tvdoz_mod.o model_physics_mf_mod.o parkind1.o stack_mod.o xrd_getoptions.o xrd_unix_env.o yomarphy.o yomcst.o yomcvmnh.o yomdprecips.o yomdvisi.o yomhook.o yomlouis.o yommse.o yomnorgwd.o yomparar.o yomphy.o yomphy0.o yomphy1.o yomphy2.o yomphy3.o yomphyds.o yomsimphl.o yomsta.o yomtoph.o yomvdoz.o $(LIBS)
+wrap_acdrag.x: wrap_acdrag.o acdrag_scc_mod.o stack_mod.o 
+	$(FC) -o wrap_acdrag.x wrap_acdrag.o acdrag_scc_mod.o stack_mod.o
 
 
 subclean:
