@@ -1,8 +1,5 @@
 PROGRAM WRAP_ACDRAG
   
-!USE acdrag_SCC_MOD, ONLY: acdrag_SCC
-!USE stack_mod
-  
 IMPLICIT NONE
   
 TYPE STACK
@@ -11,23 +8,26 @@ END TYPE
 
 TYPE(STACK) :: YLSTACK
 REAL(KIND=8), ALLOCATABLE :: ZSTACK (:, :)
-INTEGER :: I
 
 ALLOCATE (ZSTACK (32,10))
   
-!!$ACC DATA CREATE(ZSTACK ) 
-!$ACC ENTER DATA CREATE(ZSTACK )
+PRINT *, " With data create "
 
-!$acc parallel loop gang default(present) private(YLSTACK)
-DO I=1, 10
-    
-  YLSTACK%L = LOC(ZSTACK (1, I))
-  YLSTACK%U = YLSTACK%L + 32*8
+!$acc data create (ZSTACK) 
+!$acc serial create (YLSTACK)
+YLSTACK%L = LOC (ZSTACK (1, 1))
+CALL ACDRAG_SCC (YLSTACK)
+!$acc end serial
+!$acc end data
 
-  CALL ACDRAG_SCC (YLSTACK)
-    
-END DO
-!$acc end parallel loop
+PRINT *, " With enter data create "
+
+!$acc enter data create (ZSTACK)
+!$acc serial create (YLSTACK) 
+YLSTACK%L = LOC (ZSTACK (1, 1))
+CALL ACDRAG_SCC (YLSTACK)
+!$acc end serial
+!$acc exit data delete (ZSTACK)
 
 CONTAINS
 
@@ -36,11 +36,11 @@ SUBROUTINE ACDRAG_SCC (YDSTACK)
     
 IMPLICIT NONE
 TYPE(STACK), INTENT(IN) :: YDSTACK
-TYPE(STACK) :: YLSTACK
+
 POINTER (IP, ZZ )
 REAL*8 :: ZZ (10)
-YLSTACK = YDSTACK
-IP = YLSTACK%L
+
+IP = YDSTACK%L
 
 ZZ (1:10) = 3.14
 
