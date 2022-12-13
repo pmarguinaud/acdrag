@@ -1,0 +1,21 @@
+#!/bin/bash
+##SBATCH --partition biggpu
+#SBATCH --partition gpua30
+#SBATCH --gres=gpu:a30:1
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --job-name ACDRME_GPU
+#SBATCH -o A30.out
+#SBATCH -e A30.err
+##SBATCH --time=6:00:0
+#SBATCH --no-requeue
+
+module load avbp/7.X_nvhpc-21.9-gpu
+
+cd $SLURM_SUBMIT_DIR
+echo $SLURM_SUBMIT_DIR
+export CUDA_VSIBLE_DEVICES=0
+
+./run.sh
+
+
