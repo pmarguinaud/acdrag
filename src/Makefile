@@ -149,7 +149,7 @@ parkind1.o: parkind1.F90
 stack_mod.o: stack_mod.F90 
 	$(FC) -c stack_mod.F90
 
-wrap_acdrag.o: wrap_acdrag.F90 acdrag_scc_mod.o stack_mod.o
+wrap_acdrag.o: wrap_acdrag.F90 
 	$(FC) -c wrap_acdrag.F90
 
 xrd_getoptions.o: xrd_getoptions.F90 parkind1.o xrd_unix_env.o
@@ -218,8 +218,8 @@ yomtoph.o: yomtoph.F90 parkind1.o
 yomvdoz.o: yomvdoz.F90 parkind1.o
 	$(FC) -c yomvdoz.F90
 
-wrap_acdrag.x: wrap_acdrag.o acdrag_scc_mod.o stack_mod.o 
-	$(FC) -o wrap_acdrag.x wrap_acdrag.o acdrag_scc_mod.o stack_mod.o
+wrap_acdrag.x: wrap_acdrag.o 
+	$(FC) -o wrap_acdrag.x wrap_acdrag.o 
 
 
 subclean:
